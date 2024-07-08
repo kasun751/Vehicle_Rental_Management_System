@@ -12,6 +12,10 @@
         <servlet-name>SignUpServlet</servlet-name>
         <servlet-class>vrms.app.SignUpServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoginValidation</servlet-name>
+        <servlet-class>vrms.servlets.LoginValidation</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -19,6 +23,10 @@
     <servlet-mapping>
         <servlet-name>SignUpServlet</servlet-name>
         <url-pattern>/signup</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginValidation</servlet-name>
+        <url-pattern>/loginvalidate</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

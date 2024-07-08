@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vrms.app;
+package vrms.servlets;
 
-import vrms.classes.SignUp;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -23,7 +22,7 @@ import vrms.classes.SignUp;
  *
  * @author rkcp8
  */
-public class SignUpServlet extends HttpServlet {
+public class LoginValidation extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -36,31 +35,30 @@ public class SignUpServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        String email = request.getParameter("email");
+        String email = request.getParameter("userName");
         String password = MD5.getMd5(request.getParameter("password"));
+        SignUp sign = new SignUp(email);
         String message = "";
-        
-        SignUp sign = new SignUp(email);        
         try {
             if(password.equals(sign.getHashPassword(DbConnector.getConnection()))){
-                message = "Loging successfuly";
+                message = "login successfully";
+                
             }else{
-                message = "invalid user name or password!!!";
+                message = "login faild";
             }
         } catch (SQLException ex) {
-            Logger.getLogger(SignUpServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginValidation.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SignUpServlet</title>");            
+            out.println("<title>Servlet LoginValidation</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SignUpServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>"+message+" </h1>");
             out.println("</body>");
             out.println("</html>");
         }
