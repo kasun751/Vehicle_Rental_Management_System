@@ -5,6 +5,10 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%! 
+    boolean status = false;
+    
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,7 +22,15 @@
     <body>
         <div class="header-container">
             <div class="header-container-upper">
-
+                <%
+                    request.getSession(false);
+                    String email = (session != null) ? (String) session.getAttribute("userName") : "";
+                    if (email == null || email.isEmpty()) {
+                        status = false;
+                    } else {
+                        status = true;
+                    }
+                %>
             </div>
             <div class="header-container-lower">
                 <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -29,21 +41,57 @@
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                                 <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="#scrollspyHeading1">Home</a>
+                                    <a href='../ui/indexPage.jsp' class="nav-link active" aria-current="page" href="#scrollspyHeading1">Home</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#scrollspyHeading2">About Us</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#scrollspyHeading3">Our Services</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#scrollspyHeading4">Contact Us</a>
-                                </li>
+                               <%
+                                    String currentPage = (String) request.getAttribute("currentPage");
+                                    if ("index".equals(currentPage)) {
+                                        out.print("<li class='nav-item'>");
+                                        out.print("<a class='nav-link' href='#scrollspyHeading2'>About Us</a>");
+                                        out.print("</li>");
+                                        out.print("<li class='nav-item'>");
+                                        out.print("<a class='nav-link' href='#scrollspyHeading3'>Our Services</a>");
+                                        out.print("</li>");
+                                        out.print("<li class='nav-item'>");
+                                        out.print("<a class='nav-link' href='#scrollspyHeading4'>Contact Us</a>");
+                                        out.print("</li>");
+                                    }
+                                %>
+
                             </ul>
-                            <form class="d-flex" role="search">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                                <button class="btn btn-outline-success" type="submit">Search</button>
+                            <script>
+                                function refresh() {
+                                    document.getElementById('searchData').value = ""
+                                    document.getElementById('searchForm').submit();
+                                    document.getElementById('sortClear').submit();
+                                }
+                            </script>
+                            <form action="homePage.jsp" id="sortClear" hidden>
+                                <input type="text" value="" name="sort"/>
+                            </form>
+                            <form action="homePage.jsp" id="searchForm" class="d-flex" role="search" >
+
+                                <%
+                                    if ("home".equals(currentPage)) {
+                                        out.print("<img src='../Images/refresh.svg' onclick='refresh()' alt='refresh-btn' style='margin-right: 10px;width:40px; cursor:pointer' />");
+                                        out.print("<input class='form-control me-2' id='searchData' type='search' name='searchData' placeholder='Search' aria-label='Search' >");
+                                        out.print("<button class='btn btn-outline-success' type='submit' >Search</button>");
+                                        
+                                    }
+                                    if (!status) {
+                                        out.print("<a href='login.jsp' class='btn btn-primary'>Login</a>");
+                                        out.print("<a href='userRegister.jsp' class='btn btn-primary'>Register</a>");
+                                    } else {
+                                        if("index".equals(currentPage)){
+                                            out.print("<a href='homePage.jsp' class='btn btn-primary'>Find Vehicle</a>");
+                                        }
+                                        out.print("<a href='logout.jsp' class='btn btn-secondary'>Log Out</a>");
+                                    }
+                                %>
+
+
+
+
                             </form>
                         </div>
                     </div>

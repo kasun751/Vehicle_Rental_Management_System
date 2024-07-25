@@ -1,3 +1,4 @@
+<%@page import="vrms.classes.VehicleOrder"%>
 <%@page import="vrms.classes.DbConnector"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.ArrayList"%>
@@ -27,7 +28,7 @@
     </head>
     <body>
         <%
-             String currentPage = "home";
+            String currentPage = "myRentedVehicles";
             request.setAttribute("currentPage", currentPage);
         %>
         <jsp:include page="../components/headerComponent.jsp" />
@@ -40,90 +41,22 @@
         <div class="container mt-5">
             <div class="row">
                 <div class="col-md-4">
-                    <form action="homePage.jsp" class="form-control  mb-3" style="width: 18rem;">
-                        <input type="text" value="sortData" name="sort" hidden />
-                        <label class="row col-md-12 mb-3 m-1">min</label>
-                        <input type="number" name="minPrice"  class="form-control col-md-10" value="0"/>
 
-                        <label class="row col-md-12 mb-3 m-1">max</label>
-                        <input type="number" name="maxPrice" class="form-control col-md-10" value="0"/>
-
-                        <div class="row col-md-12 mb-3">   
-                            <table class="col-md-10 mb-3">
-                                <tbody>
-                                    <tr>
-                                        <th>
-                                            <label class="m-2">Air Bags</label>                                            
-                                        </th>
-                                        <td>
-                                            <input type="checkbox" name="airBag" value="1" class="form-check-input"/>
-                                        </td>                                        
-                                    </tr>
-                                    <tr>
-                                        <th class="">
-                                            <label class="m-2">Air Condition</label>                                          
-                                        </th>
-                                        <td>
-                                            <input type="checkbox" name="airCondition" value="1"  class="form-check-input "/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            <label class="m-2">Electric Window</label>
-                                        </th>  
-                                        <td>
-                                            <input type="checkbox" name="electricWindow" value="1"  class="form-check-input"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            <label class="m-2">Transmission Type</label><br>
-                                            <input type="radio" name="transmissionType" value="auto" />Automatic
-                                            <input type="radio" name="transmissionType" value="manual" />Manual
-                                        </th>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>                    
-                        <input class="row col-md-10 m-1" type="submit" value="Sort" />
-                    </form>
                 </div>
                 <div class="col-md-8">
                     <%
                         String search = request.getParameter("searchData");
-                        String sort = request.getParameter("sort");
                         search = (search != null) ? search.toLowerCase() : "";
-                        sort = (sort != null) ? sort : "";
-
-                        if (sort.equals("sortData")) {
-                            min = Double.parseDouble(request.getParameter("minPrice"));
-                            max = Double.parseDouble(request.getParameter("maxPrice"));
-                            transmissionType = request.getParameter("transmissionType");
-                            airBags = request.getParameter("airBag") != null;
-                            airCondition = request.getParameter("airCondition") != null;
-                            electricWindow = request.getParameter("electricWindow") != null;
-                        }
-
                         try {
                             if (search != null && !search.isEmpty()) {
                                 out.println("<div class='alert alert-success' role='alert'>Your Search Result :- " + search + "</div>");
                             }
-                            Vehicle vehicle = new Vehicle();
-                            if (sort.equals("sortData")) {
-                                vehicleList = vehicle.getSortedVehicleList(DbConnector.getConnection(), min, max, airBags, airCondition, electricWindow, transmissionType);
-                                out.println("<div class='alert alert-success' role='alert'>Your Sorted vehicle list: "
-                                        + (min != 0 ? " Min: " + min + " " : "")
-                                        + (max != 0 ? " Max: " + max + " " : "")
-                                        + (airBags ? " Air Bags: Yes " : " ")
-                                        + (airCondition ? " Air Condition: Yes " : " ")
-                                        + (electricWindow ? " Electric Window: Yes " : "  ")
-                                        + (transmissionType == "auto" | transmissionType == "manual" ? " Transmission Type: " + transmissionType : "  ")
-                                        + "</div>");
-
-                            } else {
-                                vehicleList = vehicle.getVehicleList(DbConnector.getConnection(), search);
-                            }
-                            for (Vehicle v : vehicleList) {
+                            VehicleOrder vo = new VehicleOrder();
+                            vo.setUsername("kasun@gmail.com");
+                            List<Integer> vehicleIDList = vo.getRentedVehicleIDList(DbConnector.getConnection(), search);
+                            for (int vid : vehicleIDList) {
+                                Vehicle v = new Vehicle().getVehicleDetailsByID(DbConnector.getConnection(), vid);
+            
                                 out.println("<div class='card mb-3 row d-flex justify-content-center col-md-12'>");
                                 out.println("<div class='row g-0'>");
                                 out.println("<div class='col-md-4 d-flex align-items-center'>");
@@ -151,7 +84,7 @@
                                 out.println("</tr>");
                                 out.println("</tbody>");
                                 out.println("</table>");
-                                out.println("<a href='rentVehicle.jsp?vid="+v.getVehicleID()+"' class='btn btn-primary'>Rent</a>");
+                                out.println("<a href='rentVehicle.jsp?vid=" + v.getVehicleID() + "' class='btn btn-primary'>Order Recieved</a>");
                                 out.println("<button type='button' class='btn btn-primary' onclick='createCookie(3)' data-bs-toggle='modal' data-bs-target='#exampleModal" + v.getVehicleID() + "'>View </button>");
                                 out.println("</div>");
                                 out.println("</div>");
@@ -239,6 +172,7 @@
                                 out.println("</div>");
                                 out.println("</div>");
                                 out.println("</div>");
+
                             }
                         } catch (Exception e) {
                             out.println("<div class='alert alert-danger' role='alert'>Error retrieving vehicle list: " + search + min + max + airBags + airCondition + electricWindow + transmissionType + "</div>");

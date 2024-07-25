@@ -13,7 +13,12 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <jsp:include page="../components/headerComponent.jsp" />
+        <%
+             String currentPage = "index";
+            request.setAttribute("currentPage", currentPage);
+        %>
+        <jsp:include page="../components/headerComponent.jsp" /> 
+        
         <div class="indexpage-imageSlider">
             <div id="carouselExampleCaptions" class="carousel slide">
                 <div class="carousel-indicators">
