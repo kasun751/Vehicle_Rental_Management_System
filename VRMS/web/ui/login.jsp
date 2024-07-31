@@ -51,6 +51,7 @@
                             if (user.validateUser(DbConnector.getConnection())) {
                                 session = request.getSession();
                                 session.setAttribute("userName", email);
+                                session.setAttribute("userType", user.getUserTypebyUsername(DbConnector.getConnection(),email));
                                 response.sendRedirect("homePage.jsp");
                             }else{
                                 response.sendRedirect("login.jsp?s=2");

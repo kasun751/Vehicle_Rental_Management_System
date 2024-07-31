@@ -7,6 +7,7 @@ import java.util.List;
 public class Vehicle {
 
     private int vehicleID;
+    private String ownerID;
     private String vehicleBrand;
     private String model;
     private int year;
@@ -68,6 +69,10 @@ public class Vehicle {
         return vehicleID;
     }
 
+    public void setVehicleID(int vehicleID) {
+        this.vehicleID = vehicleID;
+    }
+
     public String getVehicleBrand() {
         return vehicleBrand;
     }
@@ -114,6 +119,14 @@ public class Vehicle {
 
     public void setFuelType(String fuelType) {
         this.fuelType = fuelType;
+    }
+
+    public String getOwnerID() {
+        return ownerID;
+    }
+
+    public void setOwnerID(String ownerID) {
+        this.ownerID = ownerID;
     }
 
     public String getTransmissionType() {
@@ -184,6 +197,22 @@ public class Vehicle {
         return airBags;
     }
 
+    // Assuming a fixed path for now. You might want to generate a path based on vehicle attributes.
+    public String getImagePath() {
+        return "defaultImagePath.jpg";  // Change this logic as needed
+    }
+
+    public String getTitle() {
+        return vehicleBrand + " " + model; // Combining vehicleBrand and model as the title
+    }
+    public String getBrand() {
+        return vehicleBrand;
+    }
+
+    public String getDescription() {
+        return "Engine Type: " + fuelType + ", Transmission: " + transmissionType + ", Price Per Day: $" + rentalPrice + ", Features: " + features;
+    }
+    
     public void setAirBags(boolean airBags) {
         this.airBags = airBags;
     }
@@ -353,20 +382,67 @@ public class Vehicle {
         return vehicle;
         
     }
+    public int getVehicleRate(Connection conn, int vehicleID) throws SQLException{
+       // String query = "select sum(rate)/count(rate) as rating from vehicleratetable where vehicleID = ?";
+        String query = "SELECT SUM(totalrate) / COUNT(totalrate) AS average_of_averages " +
+               "FROM ( " +
+               "  SELECT SUM(rate) / COUNT(rate) AS totalrate " +
+               "  FROM vehicleratetable " +
+               "  WHERE vehicleID = ? " +
+               "  GROUP BY username " +
+               ") AS subquery";
 
-    // Assuming a fixed path for now. You might want to generate a path based on vehicle attributes.
-    public String getImagePath() {
-        return "defaultImagePath.jpg";  // Change this logic as needed
+        try(PreparedStatement pstmt = conn.prepareStatement(query) ){
+           pstmt.setInt(1, vehicleID);
+           ResultSet rs = pstmt.executeQuery();
+           if(rs.next()){
+               double temp =rs.getDouble("average_of_averages");
+               return (int) Math.floor(temp);
+           }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return 0;
+    }
+    public boolean setVehicleRating(Connection conn, int vehicleID, int rate, String username){
+          String query = "insert into vehicleratetable values(null,?,?,?);";   
+          try(PreparedStatement pstmt = conn.prepareStatement(query) ){
+           pstmt.setInt(1, vehicleID);
+           pstmt.setString(2, username);
+           pstmt.setInt(3, rate);
+           return pstmt.executeUpdate()>0;
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return false;
+    }
+    
+    public List<Vehicle> getVehicleIdListByuserName(Connection conn,String start, String end){
+        List<Vehicle> vehicleIdList = new ArrayList<>();
+        String query = "";
+        if(start.isEmpty() || end.isEmpty()){
+            query = "select vehicleID from vehicleinfo where ownerId = ? and vehicleID in (select vehicleID from ordertable) ;";
+        }else{
+            query = "select vehicleID from vehicleinfo where ownerId = ? and vehicleID in (select vehicleID from ordertable where rentStartDay between ? and ?) ;";
+        }       
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, this.ownerID);
+            if(!start.isEmpty() || !end.isEmpty()){
+                pstmt.setString(2, start);
+                pstmt.setString(3, end);
+            }
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                Vehicle v = new Vehicle();
+                v.setVehicleID(rs.getInt("vehicleID"));
+                vehicleIdList.add(v);
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        
+        return vehicleIdList;
     }
 
-    public String getTitle() {
-        return vehicleBrand + " " + model; // Combining vehicleBrand and model as the title
-    }
-    public String getBrand() {
-        return vehicleBrand;
-    }
-
-    public String getDescription() {
-        return "Engine Type: " + fuelType + ", Transmission: " + transmissionType + ", Price Per Day: $" + rentalPrice + ", Features: " + features;
-    }
 }

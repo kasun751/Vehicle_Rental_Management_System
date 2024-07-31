@@ -27,7 +27,7 @@
     </head>
     <body>
         <%
-             String currentPage = "home";
+            String currentPage = "home";
             request.setAttribute("currentPage", currentPage);
         %>
         <jsp:include page="../components/headerComponent.jsp" />
@@ -106,19 +106,24 @@
 
                         try {
                             if (search != null && !search.isEmpty()) {
-                                out.println("<div class='alert alert-success' role='alert'>Your Search Result :- " + search + "</div>");
+                                out.println("<div class='alert alert-success alert-dismissible fade show' role='alert'>");
+                                out.println("<strong>Your Search Result :-</strong> " + search + "");
+                                out.println("<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>");
+                                out.println("</div>");
                             }
                             Vehicle vehicle = new Vehicle();
                             if (sort.equals("sortData")) {
                                 vehicleList = vehicle.getSortedVehicleList(DbConnector.getConnection(), min, max, airBags, airCondition, electricWindow, transmissionType);
-                                out.println("<div class='alert alert-success' role='alert'>Your Sorted vehicle list: "
+                                out.println("<div class='alert alert-success alert-dismissible fade show' role='alert'><strong>Your Sorted vehicle list:</strong> "
                                         + (min != 0 ? " Min: " + min + " " : "")
                                         + (max != 0 ? " Max: " + max + " " : "")
                                         + (airBags ? " Air Bags: Yes " : " ")
                                         + (airCondition ? " Air Condition: Yes " : " ")
                                         + (electricWindow ? " Electric Window: Yes " : "  ")
                                         + (transmissionType == "auto" | transmissionType == "manual" ? " Transmission Type: " + transmissionType : "  ")
-                                        + "</div>");
+                                        + "");
+                                out.println("<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>");
+                                out.println("</div>");
 
                             } else {
                                 vehicleList = vehicle.getVehicleList(DbConnector.getConnection(), search);
@@ -131,7 +136,16 @@
                                 out.println("</div>");
                                 out.println("<div class='col-md-8'>");
                                 out.println("<div class='card-body'>");
-                                out.println("<h5 class='card-title'>" + v.getTitle() + "</h5>");
+                                out.println("<h5 class='card-title'>");
+                                out.println(v.getTitle() + " &nbsp;&nbsp;");
+                                int count = v.getVehicleRate(DbConnector.getConnection(), v.getVehicleID());
+                                for (int i = 0; i < count; i++) {
+                                    out.println("<img class='rate-stars' src='../Images/rateStar.svg' alt='star' style='width: 20px;' />");
+                                }
+                                for (int i = 0; i < 5 - count; i++) {
+                                    out.println("<img class='rate-stars' src='../Images/unrateStar.svg' alt='star' style='width: 20px;' />");
+                                }
+                                out.println("</h5>");
                                 out.println("<p class='card-text'>" + v.getDescription() + "</p>");
                                 out.println("<table>");
                                 out.println("<tbody>");
@@ -151,7 +165,7 @@
                                 out.println("</tr>");
                                 out.println("</tbody>");
                                 out.println("</table>");
-                                out.println("<a href='rentVehicle.jsp?vid="+v.getVehicleID()+"' class='btn btn-primary'>Rent</a>");
+                                out.println("<a href='rentVehicle.jsp?vid=" + v.getVehicleID() + "' class='btn btn-primary'>Rent</a>");
                                 out.println("<button type='button' class='btn btn-primary' onclick='createCookie(3)' data-bs-toggle='modal' data-bs-target='#exampleModal" + v.getVehicleID() + "'>View </button>");
                                 out.println("</div>");
                                 out.println("</div>");

@@ -55,6 +55,14 @@
                                         out.print("<li class='nav-item'>");
                                         out.print("<a class='nav-link' href='#scrollspyHeading4'>Contact Us</a>");
                                         out.print("</li>");
+                                    }else if("home".equals(currentPage)){
+                                        out.print("<li class='nav-item'>");
+                                        out.print("<a class='nav-link' href='../ui/myRentedVehicles.jsp'>RentedVehicles</a>");
+                                        out.print("</li>");
+                                    }else if("myRentedVehicles".equals(currentPage)){
+                                        out.print("<li class='nav-item'>");
+                                        out.print("<a class='nav-link' href='../ui/homePage.jsp'>FindVehicle</a>");
+                                        out.print("</li>");
                                     }
                                 %>
 
@@ -72,7 +80,7 @@
                             <form action="homePage.jsp" id="searchForm" class="d-flex" role="search" >
 
                                 <%
-                                    if ("home".equals(currentPage)) {
+                                    if ("home".equals(currentPage) || "myRentedVehicles".equals(currentPage)) {
                                         out.print("<img src='../Images/refresh.svg' onclick='refresh()' alt='refresh-btn' style='margin-right: 10px;width:40px; cursor:pointer' />");
                                         out.print("<input class='form-control me-2' id='searchData' type='search' name='searchData' placeholder='Search' aria-label='Search' >");
                                         out.print("<button class='btn btn-outline-success' type='submit' >Search</button>");
@@ -84,14 +92,14 @@
                                     } else {
                                         if("index".equals(currentPage)){
                                             out.print("<a href='homePage.jsp' class='btn btn-primary'>Find Vehicle</a>");
+                                            String userType =session.getAttribute("userType")!=null? (String)session.getAttribute("userType"):"";
+                                            if(userType.equals("vehicleOwner")){
+                                                out.print("<a href='dashboard.jsp' class='btn btn-primary'>Dashboard</a>");
+                                            }                                            
                                         }
                                         out.print("<a href='logout.jsp' class='btn btn-secondary'>Log Out</a>");
                                     }
                                 %>
-
-
-
-
                             </form>
                         </div>
                     </div>

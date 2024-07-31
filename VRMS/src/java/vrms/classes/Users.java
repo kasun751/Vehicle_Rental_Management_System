@@ -159,6 +159,17 @@ public class Users {
 
     return user;
 }
+   public String getUserTypebyUsername(Connection conn,String username) throws SQLException{
+       String query = "select account_type from users where email=?;";
+       try(PreparedStatement pstmt = conn.prepareStatement(query)){
+           pstmt.setString(1, username);
+           ResultSet rs = pstmt.executeQuery();
+           if(rs.next()){
+               return rs.getString("account_type");
+           }
+       }
+       return "";
+   }
 
     
 }

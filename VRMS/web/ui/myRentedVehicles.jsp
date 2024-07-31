@@ -1,3 +1,4 @@
+<%@page import="vrms.classes.OrderObject"%>
 <%@page import="vrms.classes.VehicleOrder"%>
 <%@page import="vrms.classes.DbConnector"%>
 <%@page import="java.util.List"%>
@@ -6,8 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%!
-    List<Vehicle> vehicleList = new ArrayList<Vehicle>();
-
+    String s = "";
     double min = 0;
     double max = 0;
     String transmissionType = "";
@@ -18,7 +18,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link href="../css/homePage.css" rel="stylesheet">
+        <link href="../css/myRentedVehicles.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
@@ -41,29 +41,73 @@
         <div class="container mt-5">
             <div class="row">
                 <div class="col-md-4">
-
+                    <%
+                        s = request.getParameter("s") != null ? request.getParameter("s") : "";
+                        VehicleOrder vo1 = new VehicleOrder().getOrderDetails(DbConnector.getConnection(), s);
+                        if (vo1 != null) {
+                            out.print("<h1>Order Details</h1>");
+                            out.print("<table class='table'>");
+                            out.print("<tbody>");
+                            out.print("<tr>");
+                            out.print("<th>Order ID</th>");
+                            out.print("<td>" + vo1.getOrderID() + "</td>");
+                            out.print("</tr>");
+                            out.print("<tr>");
+                            out.print("<th>Rented Day</th>");
+                            out.print("<td>" + vo1.getStartDay() + "</td>");
+                            out.print("</tr>");
+                            out.print("<tr>");
+                            out.print("<th>No.of Days</th>");
+                            out.print("<td>" + vo1.getDays() + "</td>");
+                            out.print("</tr>");
+                            out.print("<tr>");
+                            out.print("<th>Payment</th>");
+                            out.print("<td>" + vo1.getPayment() + "</td>");
+                            out.print("</tr>");
+                            out.print("<tr>");
+                            out.print("<th>Status</th>");
+                            out.print("<td>" + vo1.getStatus() + "</td>");
+                            out.print("</tr>");
+                            out.print("</tbody>");
+                            out.print("</table>");
+                        }
+                    %>
                 </div>
                 <div class="col-md-8">
                     <%
                         String search = request.getParameter("searchData");
+                        String r = request.getParameter("r") != null ? request.getParameter("r") : "";
                         search = (search != null) ? search.toLowerCase() : "";
                         try {
                             if (search != null && !search.isEmpty()) {
                                 out.println("<div class='alert alert-success' role='alert'>Your Search Result :- " + search + "</div>");
                             }
+                            if(r.equals("1")){
+                                out.println("<div class='alert alert-success' role='alert'><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'><p>Thank you for Rating</p></div>");
+                                out.println("<div class='alert alert-success' role='alert'>Mark Order as Complete...!</div>");
+                            }else if(r.equals("2")){
+                                out.println("<div class='alert alert-success' role='alert'>Mark Order as Complete...!</div>");
+                            }else if(r.equals("0")){
+                                out.println("<div class='alert alert-danger' role='alert'>Try again...!!!</div>");
+                            }
                             VehicleOrder vo = new VehicleOrder();
-                            vo.setUsername("kasun@gmail.com");
-                            List<Integer> vehicleIDList = vo.getRentedVehicleIDList(DbConnector.getConnection(), search);
-                            for (int vid : vehicleIDList) {
-                                Vehicle v = new Vehicle().getVehicleDetailsByID(DbConnector.getConnection(), vid);
-            
+                            String username = (String) session.getAttribute("userName");
+                            vo.setUsername(username);
+                            List<OrderObject> vehicleIDList = vo.getRentedVehicleIDList(DbConnector.getConnection(), search);
+                            for (OrderObject vid : vehicleIDList) {
+                                Vehicle v = new Vehicle().getVehicleDetailsByID(DbConnector.getConnection(), vid.getVehicleId());
+
                                 out.println("<div class='card mb-3 row d-flex justify-content-center col-md-12'>");
                                 out.println("<div class='row g-0'>");
                                 out.println("<div class='col-md-4 d-flex align-items-center'>");
                                 //out.println("<img src='../Images/" + v.getImagePath() + "' class='img-fluid rounded-start' alt='Image description'>");
+                                String style = "";
+                                if (s.equals(vid.getOrderId())) {
+                                    style = "style='background-color:red;'";
+                                }
                                 out.println("</div>");
                                 out.println("<div class='col-md-8'>");
-                                out.println("<div class='card-body'>");
+                                out.println("<div class='card-body' " + style + " >");
                                 out.println("<h5 class='card-title'>" + v.getTitle() + "</h5>");
                                 out.println("<p class='card-text'>" + v.getDescription() + "</p>");
                                 out.println("<table>");
@@ -84,8 +128,9 @@
                                 out.println("</tr>");
                                 out.println("</tbody>");
                                 out.println("</table>");
-                                out.println("<a href='rentVehicle.jsp?vid=" + v.getVehicleID() + "' class='btn btn-primary'>Order Recieved</a>");
-                                out.println("<button type='button' class='btn btn-primary' onclick='createCookie(3)' data-bs-toggle='modal' data-bs-target='#exampleModal" + v.getVehicleID() + "'>View </button>");
+                                out.println("<button type='button' class='btn btn-success' data-bs-toggle='modal' data-bs-target='#example" + v.getVehicleID() + "' >Order Recived </button>");
+                                out.println("<button type='button' class='btn btn-secondary' onclick='createCookie(3)' data-bs-toggle='modal' data-bs-target='#exampleModal" + v.getVehicleID() + "'>View </button>");
+                                out.println("<a href='myRentedVehicles.jsp?s=" + vid.getOrderId() + "' ><button type='button' class='btn btn-primary' >Order Details </button></a>");
                                 out.println("</div>");
                                 out.println("</div>");
                                 out.println("</div>");
@@ -173,6 +218,44 @@
                                 out.println("</div>");
                                 out.println("</div>");
 
+                                out.println("<div class='modal fade' id='example" + v.getVehicleID() + "' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>");
+
+                                out.println("<div class='modal-dialog'>");
+                                out.println("<div class='modal-content'>");
+                                out.println("<div class='modal-header'>");
+                                out.println("<h5 class='modal-title'>Rate Our Service</h5>");
+                                out.println("<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>");
+                                out.println("</div>");
+                                out.println("<div class='modal-body'>");
+                                out.println("<div class='container'>");
+                                out.println("<div class='row'>");
+                                out.println("<img class='rate-stars' id='star1' onclick='handleRate(1," + v.getVehicleID() + ")'  src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
+                                out.println("<img class='rate-stars' id='star2' onclick='handleRate(2," + v.getVehicleID() + ")' src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
+                                out.println("<img class='rate-stars' id='star3' onclick='handleRate(3," + v.getVehicleID() + ")' src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
+                                out.println("<img class='rate-stars' id='star4' onclick='handleRate(4," + v.getVehicleID() + ")' src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
+                                out.println("<img class='rate-stars' id='star5' onclick='handleRate(5," + v.getVehicleID() + ")' src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
+                                
+                                
+                                out.println("</div>");
+                                out.println("</div>");
+
+                                out.println("</div>");
+                                out.println("<div class='modal-footer'>");
+                                //hidden form
+                                out.println("<form id='rateform" + v.getVehicleID() + "' action='rateProcess.jsp' method='POST'>");
+                                out.println("<input type='text' name='rateIndex' id='rateIndexId" + v.getVehicleID() + "' hidden />");
+                                out.println("<input type='text' name='vehicleId' id='vehicleId" + v.getVehicleID() + "' value='" + vid.getVehicleId() + "' hidden />");
+                                out.println("<input type='text' name='o' value='" + vid.getOrderId() + "' hidden />");
+                                
+                                out.println("<button type='button' onclick='handleSubmitRate()' class='btn btn-primary' data-bs-dismiss='modal'>Submit</button>");
+                                out.println("<button type='button' onclick='handleRate(0," + v.getVehicleID() + ")' class='btn btn-danger'>Clear</button>");
+                                out.println("<button type='button' onclick='handleSubmitRate()' class='btn btn-secondary' data-bs-dismiss='modal'>Close</button></a>");
+                                out.println("</form>");
+                                out.println("</div>");
+                                out.println("</div>");
+                                out.println("</div>");
+                                out.println("</div>");
+
                             }
                         } catch (Exception e) {
                             out.println("<div class='alert alert-danger' role='alert'>Error retrieving vehicle list: " + search + min + max + airBags + airCondition + electricWindow + transmissionType + "</div>");
@@ -181,5 +264,30 @@
                 </div>            
             </div>
         </div>
+        <script>
+    let val = 0; // Stores the rating value
+    let id = 1; // Stores the vehicle ID for form submission
+
+    // Function to handle star rating changes
+    function handleRate(e, vid) {
+        id = vid; // Set the current vehicle ID
+        val = e;  // Set the rating value
+
+        // Update star images based on the rating value
+        for (let i = 1; i <= 5; i++) {
+            document.getElementById("star" + i).src = i <= e ? "../Images/rateStar.svg" : "../Images/unrateStar.svg";
+        }
+        
+        // Update the hidden input field with the rating value
+        document.getElementById("rateIndexId" + id).value = val;
+    }
+
+    // Function to submit the form with the selected rating
+    function handleSubmitRate() {
+        document.getElementById("rateIndexId" + id).value = val;
+        document.getElementById("rateform" + id).submit();
+    }
+</script>
+
     </body>
 </html>
