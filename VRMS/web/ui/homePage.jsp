@@ -17,7 +17,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link href="../css/homePage.css" rel="stylesheet">
+        <link href="homePage.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
@@ -25,7 +25,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Home Page</title>
     </head>
-    <body>
+    <body id="homePage-body">
         <%
             String currentPage = "home";
             request.setAttribute("currentPage", currentPage);
@@ -76,7 +76,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>
+                                        <th class="p-3">
                                             <label class="m-2">Transmission Type</label><br>
                                             <input type="radio" name="transmissionType" value="auto" />Automatic
                                             <input type="radio" name="transmissionType" value="manual" />Manual
@@ -85,19 +85,32 @@
                                 </tbody>
                             </table>
                         </div>                    
-                        <input class="row col-md-10 m-1" type="submit" value="Sort" />
+                        <input class="row col-md-10 m-1 btn btn-primary" type="submit" value="Sort" />
                     </form>
                 </div>
                 <div class="col-md-8">
                     <%
+                        String u = request.getParameter("u");
+                        u = (u != null) ? u : "";
+                        if (u.equals("0")) {
+                            out.println("<div class='alert alert-danger alert-dismissible fade show mt-3' role='alert'>");
+                            out.println("<strong>Profile can't be Change...Try again...!!!</strong>");
+                            out.println("<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>");
+                            out.println("</div>");
+                        } else if (u.equals("1")) {
+                            out.println("<div class='alert alert-success alert-dismissible fade show mt-3' role='alert'>");
+                            out.println("<strong>Your Profile Successfully Changed...!!!</strong>");
+                            out.println("<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>");
+                            out.println("</div>");
+                        }
                         String search = request.getParameter("searchData");
                         String sort = request.getParameter("sort");
                         search = (search != null) ? search.toLowerCase() : "";
                         sort = (sort != null) ? sort : "";
 
                         if (sort.equals("sortData")) {
-                            min = Double.parseDouble(request.getParameter("minPrice"));
-                            max = Double.parseDouble(request.getParameter("maxPrice"));
+                            min = Double.parseDouble(request.getParameter("minPrice"))/10;
+                            max = Double.parseDouble(request.getParameter("maxPrice"))/10;
                             transmissionType = request.getParameter("transmissionType");
                             airBags = request.getParameter("airBag") != null;
                             airCondition = request.getParameter("airCondition") != null;
@@ -115,8 +128,8 @@
                             if (sort.equals("sortData")) {
                                 vehicleList = vehicle.getSortedVehicleList(DbConnector.getConnection(), min, max, airBags, airCondition, electricWindow, transmissionType);
                                 out.println("<div class='alert alert-success alert-dismissible fade show' role='alert'><strong>Your Sorted vehicle list:</strong> "
-                                        + (min != 0 ? " Min: " + min + " " : "")
-                                        + (max != 0 ? " Max: " + max + " " : "")
+                                        + (min != 0 ? " Min: " + min*10 + " " : "")
+                                        + (max != 0 ? " Max: " + max*10 + " " : "")
                                         + (airBags ? " Air Bags: Yes " : " ")
                                         + (airCondition ? " Air Condition: Yes " : " ")
                                         + (electricWindow ? " Electric Window: Yes " : "  ")
@@ -132,7 +145,8 @@
                                 out.println("<div class='card mb-3 row d-flex justify-content-center col-md-12'>");
                                 out.println("<div class='row g-0'>");
                                 out.println("<div class='col-md-4 d-flex align-items-center'>");
-                                //out.println("<img src='../Images/" + v.getImagePath() + "' class='img-fluid rounded-start' alt='Image description'>");
+                                out.println("<img src='../uploads/" + v.getImagePath() + "' class='img-fluid rounded-start' alt='Image description'>");
+
                                 out.println("</div>");
                                 out.println("<div class='col-md-8'>");
                                 out.println("<div class='card-body'>");
@@ -261,5 +275,6 @@
                 </div>            
             </div>
         </div>
+        <jsp:include page="../components/footerComponent.jsp" />
     </body>
 </html>

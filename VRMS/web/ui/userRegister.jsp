@@ -10,6 +10,7 @@
 
 <!DOCTYPE html>
 <html>
+    <jsp:include page="../components/headerComponent.jsp" />
     <head>
         <title>User Registration</title>
         <meta charset="UTF-8">
@@ -22,6 +23,7 @@
                 border-color: #28a745;
             }
         </style>
+        <link href="userRegister.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
@@ -37,8 +39,9 @@
                 }
             }
         </script>
+
     </head>
-    <body>
+    <body class="userRegister-body"> 
         <%
             String nic = request.getParameter("nic");
             nic = nic != null ? nic : "";
@@ -53,7 +56,7 @@
                 String confirmPassword = request.getParameter("confirmPassword");
                 String account_type = request.getParameter("account_type");
                 Users user1 = new Users();
-                    out.print(""+email+"");
+                out.print("" + email + "");
                 if (user1.checkEmailAvailability(DbConnector.getConnection(), email)) {
                     if (password.equals(confirmPassword)) {
                         Users user = new Users(fname, lname, phone, email, address, city, nic, password, account_type);
@@ -87,7 +90,7 @@
                             out.print("</div>");
                             out.print("<div class='alert alert-danger' role='alert'>");
                             out.print("Registration Failed!");
-                            out.print("</div>");                        
+                            out.print("</div>");
                         } else if (s.equals("4")) {
                             out.print("<div class='alert alert-danger' role='alert'>");
                             out.print("Email already exists. !!!");
@@ -143,8 +146,8 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-6">
-                            <label class="text-danger">Are you a Vehicle Owner?</label>
+                        <div class="col-12">
+                            <label class="text-info mb-1">Are you a Vehicle Owner?</label>
                             <div>
                                 <input type="radio" name="account_type" value="vehicleOwner" required> Yes
                                 <input type="radio" name="account_type" value="customer" checked> No
@@ -152,7 +155,8 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <a href="indexPage.jsp" style="float:right;" class="btn btn-outline-danger m-2">Cancel</a>
+                    <button type="submit" style="float:right;" class="btn btn-success m-2">Submit</button>
                 </form>
             </div>
         </div>
@@ -173,7 +177,7 @@
                     });
                 }, false);
             })();
-        </script>
+        </script>        
     </body>
 </html>
 

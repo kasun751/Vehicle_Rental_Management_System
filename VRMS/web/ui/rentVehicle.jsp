@@ -51,6 +51,7 @@
         </script>
     </head>
     <body>
+        <jsp:include page="../components/headerComponent.jsp" />
         <%
             String email = (session != null) ? (String) session.getAttribute("userName") : "";
             startday = request.getParameter("startDay");
@@ -86,39 +87,12 @@
                     checkoutField = false;
                 }
             }
-//            if (noOfDays != null && !noOfDays.equals("0")) {
-//                days = Integer.parseInt(noOfDays);
-//
-//                payhere_amount = currentVehicle.getRentalPrice() * days;
-//                checkoutField = true;
-//                UUID uniqueId = UUID.randomUUID();
-//                String uniqueIdString = uniqueId.toString();
-//                orderID = uniqueIdString;
-//            }
         %>
         <div class="container">
             <div class="row">
                 <div class="col-5">
-                    <div id="carouselExample" class="carousel slide">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="../Images/tempImg1.jpeg" class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="../Images/tempImg2.jpeg" class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="../Images/tempImg3.jpeg" class="d-block w-100" alt="...">
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
+                    <div>
+                        <img src="<%= "../uploads/"+currentVehicle.getImageURL() %>" class="d-block w-100" alt="...">
                     </div>
                     <% if (checkoutField) {
                             session.setAttribute("payment", payhere_amount);
@@ -129,7 +103,9 @@
                             out.print("<div class='row'>");
                             out.print("<div>");
                             out.print("<h4>CheckOut</h4>");
-                            out.print("Your pre-payment is " + payhere_amount + " LKR");
+                            out.println("Your <b>pre-payment</b> is " + payhere_amount + " LKR<br>");
+                            out.println("Your <b>post-payment</b> is " + payhere_amount*9 + " LKR<br>");
+                            out.println("Your <b>Total-payment</b> is " + payhere_amount*10 + " LKR<br>");
                             //out.print("<button type='button' class='btn btn-success mt-5 col-12' id='payhere-payment' >Pay now</button>");
                             out.print("<a href='paymentGateway.jsp'><button type='button' class='btn btn-success mt-5 col-12' >Pay now</button> </a>");
                             out.print("</div>");
@@ -228,7 +204,7 @@
                                                 <!--                                                <input type="text" id="unitPrice" name="price" hidden/>-->
                                                 <input type="text" id="noOfDays" name="days" hidden/>
                                                 <input type="date" id="startDay" name="startDay" hidden/>
-                                                <button type="button" onclick="handleRent()" class="btn btn-primary mt-5 col-12" >Rent</button>
+                                                <button type="button" onclick="handleRent()" class="btn btn-primary mt-5 mb-4 col-12" >Rent</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -265,5 +241,6 @@
                 }
             }
         </script>
+        <jsp:include page="../components/footerComponent.jsp" />
     </body>
 </html>

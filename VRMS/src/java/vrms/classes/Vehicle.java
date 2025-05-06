@@ -24,7 +24,7 @@ public class Vehicle {
     private boolean airCondition;
     private boolean airBags;
     private boolean electricWindow;
-    private String imagePath;
+    private String imageURL;
 
 
     public Vehicle() {
@@ -63,7 +63,26 @@ public class Vehicle {
         this.airCondition = airCondition;
         this.electricWindow = electricWindow;
     }
-
+public Vehicle(int vehicleID, String vehicleBrand, String model, int year, String vehicleType, int seatingCapacity, String fuelType, String transmissionType, double mileage, double rentalPrice, boolean availability, String features, String color, String insuranceInfo, boolean airCondition, boolean airBags, boolean electricWindow, String imageURL) {
+        this.vehicleID = vehicleID;
+        this.vehicleBrand = vehicleBrand;
+        this.model = model;
+        this.year = year;
+        this.vehicleType = vehicleType;
+        this.seatingCapacity = seatingCapacity;
+        this.fuelType = fuelType;
+        this.transmissionType = transmissionType;
+        this.mileage = mileage;
+        this.rentalPrice = rentalPrice;
+        this.availability = availability;
+        this.features = features;
+        this.color = color;
+        this.insuranceInfo = insuranceInfo;
+        this.airCondition = airCondition;
+        this.airBags = airBags;
+        this.electricWindow = electricWindow;
+        this.imageURL = imageURL;
+    }
     // Getters and Setters
     public int getVehicleID() {
         return vehicleID;
@@ -81,6 +100,14 @@ public class Vehicle {
         this.vehicleBrand = vehicleBrand;
     }
 
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+    
     public String getModel() {
         return model;
     }
@@ -199,7 +226,11 @@ public class Vehicle {
 
     // Assuming a fixed path for now. You might want to generate a path based on vehicle attributes.
     public String getImagePath() {
-        return "defaultImagePath.jpg";  // Change this logic as needed
+        if (imageURL == ""){
+            return "defaultVehicle.png";
+        }else{
+            return imageURL;
+        }
     }
 
     public String getTitle() {
@@ -210,7 +241,7 @@ public class Vehicle {
     }
 
     public String getDescription() {
-        return "Engine Type: " + fuelType + ", Transmission: " + transmissionType + ", Price Per Day: $" + rentalPrice + ", Features: " + features;
+        return "Engine Type: " + fuelType + ", Transmission: " + transmissionType + ", Price Per Day: LKR " + rentalPrice*9 + ", Features: " + features;
     }
     
     public void setAirBags(boolean airBags) {
@@ -250,7 +281,8 @@ public class Vehicle {
                         rs.getString("insuranceInfo"),
                         rs.getBoolean("airCondition"),
                         rs.getBoolean("airBags"),
-                        rs.getBoolean("electricWindow")
+                        rs.getBoolean("electricWindow"),
+                        rs.getString("img_url")
                 );
             }
         }catch(Exception e){
@@ -295,7 +327,8 @@ public class Vehicle {
                         rs.getString("insuranceInfo"),
                         rs.getBoolean("airCondition"),
                         rs.getBoolean("airBags"),
-                        rs.getBoolean("electricWindow")
+                        rs.getBoolean("electricWindow"),
+                        rs.getString("img_url")
                 );
                 vehicleList.add(vehicle);
             }
@@ -340,7 +373,8 @@ public class Vehicle {
                         rs.getString("insuranceInfo"),
                         rs.getBoolean("airCondition"),
                         rs.getBoolean("airBags"),
-                        rs.getBoolean("electricWindow")
+                        rs.getBoolean("electricWindow"),
+                        rs.getString("img_url")
                 );
                 vehicleList.add(vehicle);
             }
@@ -443,6 +477,14 @@ public class Vehicle {
         }
         
         return vehicleIdList;
+    }
+    
+    public boolean deleteVehicle(Connection conn, int vehicleID) throws SQLException {
+        String query = "DELETE FROM vehicleinfo WHERE vehicleId = ?";
+        try (PreparedStatement pstm = conn.prepareStatement(query)) {
+            pstm.setInt(1, vehicleID);
+            return pstm.executeUpdate() > 0;
+        }
     }
 
 }

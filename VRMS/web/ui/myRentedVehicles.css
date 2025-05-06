@@ -14,3 +14,9 @@ and open the template in the editor.
 img{
     width: 10px;
 }
+#myRented-body{
+    background: rgba(88,128,128,.2);
+}
+#orderDetails-container{
+    border-radius: 20px;
+}

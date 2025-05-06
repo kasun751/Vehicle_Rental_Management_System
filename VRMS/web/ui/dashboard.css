@@ -19,17 +19,10 @@ body {
     margin: 0 auto;
 }
 
-header {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 0;
-    text-align: center;
-}
-
-nav {
+/*nav {
     background-color: #444;
     overflow: hidden;
-}
+}*/
 
 nav ul {
     list-style: none;
@@ -54,9 +47,9 @@ nav ul li a:hover {
 }
 
 main {
-    background-color: #fff;
+    background-color: rgba(88,128,128,.2);
     padding: 20px;
-    margin: 20px 0;
+    margin: 0 0;
 }
 
 h2, h3 {
@@ -86,7 +79,7 @@ h2, h3 {
     background-color: #005f73;
 }
 
-.stats {
+/*.stats {
     display: flex;
     justify-content: space-around;
 }
@@ -101,7 +94,7 @@ h2, h3 {
 
 .stat h4 {
     margin: 0 0 10px;
-}
+}*/
 
 footer {
     background-color: #333;

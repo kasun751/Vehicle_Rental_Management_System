@@ -19,6 +19,7 @@
                 border-color: #28a745;
             }
         </style>
+        <link href="login.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="../css/login.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
@@ -27,9 +28,11 @@
         <title>VRMS Login</title>
     </head>
     <body>
-        <div class="login-outer-container">
-            <div class="container login-inner-container mt-5 col-7">
-                <form action="login.jsp" method="POST" class="needs-validation" novalidate>
+        <jsp:include page="../components/headerComponent.jsp" /> 
+        <div class="login-outer-container d-flex justify-content-center">
+            <div class="container login-inner-container col-lg-5 d-flex justify-items-center justify-content-center">
+                <img src="../Images/logo.png" class="col-4" style="width:200px;height: 200px;" />
+                <form action="login.jsp" method="POST" class="needs-validation col-8" novalidate>
                     <%
                         String s = request.getParameter("s");
                         s = s != null ? s : "";
@@ -72,7 +75,9 @@
                             Please provide a password.
                         </div>
                     </div>
-                    <button class="btn btn-primary" type="submit">Login</button>
+                    <button class="btn btn-primary w-50 mt-2" type="submit">Login</button>
+                    <a href="userRegister.jsp" class="btn btn-outline-secondary w-40 mt-2" >Register</a>
+                    <a href="indexPage.jsp" class="btn btn-outline-danger w-40 mt-2" >Cancel</a>
                 </form>
             </div>
         </div>
@@ -93,5 +98,6 @@
                 }, false);
             })();
         </script>
+        <jsp:include page="../components/footerComponent.jsp" />
     </body>
 </html>

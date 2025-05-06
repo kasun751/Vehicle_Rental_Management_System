@@ -18,7 +18,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link href="../css/myRentedVehicles.css" rel="stylesheet">
+        <link href="myRentedVehicles.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
@@ -26,7 +26,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Home Page</title>
     </head>
-    <body>
+    <body id="myRented-body">
         <%
             String currentPage = "myRentedVehicles";
             request.setAttribute("currentPage", currentPage);
@@ -44,9 +44,10 @@
                     <%
                         s = request.getParameter("s") != null ? request.getParameter("s") : "";
                         VehicleOrder vo1 = new VehicleOrder().getOrderDetails(DbConnector.getConnection(), s);
+                        out.print("<h1>Order Details</h1>");
                         if (vo1 != null) {
-                            out.print("<h1>Order Details</h1>");
-                            out.print("<table class='table'>");
+                            
+                            out.print("<table class='table' id='orderDetails-container'>");
                             out.print("<tbody>");
                             out.print("<tr>");
                             out.print("<th>Order ID</th>");
@@ -80,15 +81,31 @@
                         search = (search != null) ? search.toLowerCase() : "";
                         try {
                             if (search != null && !search.isEmpty()) {
-                                out.println("<div class='alert alert-success' role='alert'>Your Search Result :- " + search + "</div>");
+//                                out.println("<div class='alert alert-success' role='alert'>Your Search Result :- " + search + "</div>");
+                                out.println("<div class='alert alert-success alert-dismissible fade show' role='alert'>");
+                                out.println("<strong>Your Search Result :-</strong> " + search + "");
+                                out.println("<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>");
+                                out.println("</div>");
                             }
                             if(r.equals("1")){
-                                out.println("<div class='alert alert-success' role='alert'><button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'><p>Thank you for Rating</p></div>");
-                                out.println("<div class='alert alert-success' role='alert'>Mark Order as Complete...!</div>");
+//                                out.println("<div class='alert alert-success' role='alert'>Thank you for Rating<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></div>");
+//                                out.println("<div class='alert alert-success' role='alert'>Mark Order as Complete...!</div>");
+                                out.println("<div class='alert alert-success alert-dismissible fade show' role='alert'>");
+                                out.println("<strong>Thank you for Rating</strong>");
+                                out.println("<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>");
+                                out.println("</div>");
                             }else if(r.equals("2")){
-                                out.println("<div class='alert alert-success' role='alert'>Mark Order as Complete...!</div>");
+//                                out.println("<div class='alert alert-success' role='alert'>Mark Order as Complete...!</div>");
+                                out.println("<div class='alert alert-success alert-dismissible fade show' role='alert'>");
+                                out.println("<strong>Mark Order as Complete...!</strong>");
+                                out.println("<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>");
+                                out.println("</div>");
                             }else if(r.equals("0")){
-                                out.println("<div class='alert alert-danger' role='alert'>Try again...!!!</div>");
+                                //out.println("<div class='alert alert-danger' role='alert'>Try again...!!!</div>");
+                                out.println("<div class='alert alert-danger alert-dismissible fade show' role='alert'>");
+                                out.println("<strong>Try again...!!!</strong>");
+                                out.println("<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>");
+                                out.println("</div>");
                             }
                             VehicleOrder vo = new VehicleOrder();
                             String username = (String) session.getAttribute("userName");
@@ -100,12 +117,13 @@
                                 out.println("<div class='card mb-3 row d-flex justify-content-center col-md-12'>");
                                 out.println("<div class='row g-0'>");
                                 out.println("<div class='col-md-4 d-flex align-items-center'>");
-                                //out.println("<img src='../Images/" + v.getImagePath() + "' class='img-fluid rounded-start' alt='Image description'>");
+                                out.println("<img src='../uploads/" + v.getImagePath() + "' style='width:100%' class='img-fluid rounded-start' alt='Image description'>");
+                                out.println("</div>");
                                 String style = "";
                                 if (s.equals(vid.getOrderId())) {
-                                    style = "style='background-color:red;'";
+                                    style = "style='background-color:rgba(88,128,128,0.5);color:white'";
                                 }
-                                out.println("</div>");
+                                
                                 out.println("<div class='col-md-8'>");
                                 out.println("<div class='card-body' " + style + " >");
                                 out.println("<h5 class='card-title'>" + v.getTitle() + "</h5>");
@@ -229,11 +247,11 @@
                                 out.println("<div class='modal-body'>");
                                 out.println("<div class='container'>");
                                 out.println("<div class='row'>");
-                                out.println("<img class='rate-stars' id='star1' onclick='handleRate(1," + v.getVehicleID() + ")'  src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
-                                out.println("<img class='rate-stars' id='star2' onclick='handleRate(2," + v.getVehicleID() + ")' src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
-                                out.println("<img class='rate-stars' id='star3' onclick='handleRate(3," + v.getVehicleID() + ")' src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
-                                out.println("<img class='rate-stars' id='star4' onclick='handleRate(4," + v.getVehicleID() + ")' src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
-                                out.println("<img class='rate-stars' id='star5' onclick='handleRate(5," + v.getVehicleID() + ")' src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
+                                out.println("<img class='rate-stars' id='star" + v.getVehicleID() + "1' onclick='handleRate(1," + v.getVehicleID() + ")'  src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
+                                out.println("<img class='rate-stars' id='star" + v.getVehicleID() + "2' onclick='handleRate(2," + v.getVehicleID() + ")' src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
+                                out.println("<img class='rate-stars' id='star" + v.getVehicleID() + "3' onclick='handleRate(3," + v.getVehicleID() + ")' src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
+                                out.println("<img class='rate-stars' id='star" + v.getVehicleID() + "4' onclick='handleRate(4," + v.getVehicleID() + ")' src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
+                                out.println("<img class='rate-stars' id='star" + v.getVehicleID() + "5' onclick='handleRate(5," + v.getVehicleID() + ")' src='../Images/unrateStar.svg' alt='star' style='width: 50px;cursor:pointer;' />");
                                 
                                 
                                 out.println("</div>");
@@ -275,7 +293,7 @@
 
         // Update star images based on the rating value
         for (let i = 1; i <= 5; i++) {
-            document.getElementById("star" + i).src = i <= e ? "../Images/rateStar.svg" : "../Images/unrateStar.svg";
+            document.getElementById("star"+vid + i).src = i <= e ? "../Images/rateStar.svg" : "../Images/unrateStar.svg";
         }
         
         // Update the hidden input field with the rating value
@@ -288,6 +306,6 @@
         document.getElementById("rateform" + id).submit();
     }
 </script>
-
+<jsp:include page="../components/footerComponent.jsp" />
     </body>
 </html>
