@@ -1,0 +1,103 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+.carousel-inner img {
+    border-radius: 8px;
+}
+
+/* Carousel Controls */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+}
+
+/* Table Styles */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th,
+.table td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #343a40;
+    color: #fff;
+}
+
+.table td {
+    background-color: #fff;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Slider Styles */
+input[type="range"] {
+    margin: 10px 0;
+    -webkit-appearance: none;
+    background: #ddd;
+    height: 8px;
+    border-radius: 5px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+/* Buttons */
+.col-3 > button {
+    background-color: #007bff;
+    border-radius: 20px;
+    border: 1px solid black;
+    color: #fff;
+    padding: 5px;
+    width: 50px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Input Display */
+input[type="text"]#days_display {
+    width: 50px;
+    margin: 0 10px;
+    text-align: center;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    background-color: #fff;
+}
