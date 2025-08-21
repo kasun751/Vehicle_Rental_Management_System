@@ -1,0 +1,31 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Aug 3, 2024, 7:50:36 AM
+    Author     : rkcp8
+*/
+.login-inner-container{
+    background: rgb(29,80,142);
+    background: linear-gradient(153deg, rgba(29,80,142,0.7) 0%, rgba(46,40,42,0.7) 100%);
+    padding:20px;
+    height: 300px;
+    margin-top: 100px;
+    border:2px solid gray;
+    border-radius: 20px;
+    color:white;
+    font-weight: bold;
+    align-items: center;
+}
+.login-outer-container{
+    background-image: url("../Images/login-bg-pic.svg");
+    background-size: cover; /* Ensure the image covers the entire div */
+    background-position: center right; /* Position the image to the right */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    height: 90vh; /* Set the height to the full viewport height */
+    width: 100vw; /* Set the width to the full viewport width */
+    position: relative;
+}
+

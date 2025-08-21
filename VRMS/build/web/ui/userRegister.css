@@ -1,0 +1,38 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Aug 3, 2024, 9:10:08 AM
+    Author     : rkcp8
+*/
+.userRegister-body{
+    background-image: url("../Images/registration-bg-pic.svg");
+    background-size: cover; /* Ensure the image covers the entire div */
+    background-position: center right; /* Position the image to the right */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    height: 90vh; /* Set the height to the full viewport height */
+    width: 100vw; /* Set the width to the full viewport width */
+    position: relative;
+    
+}
+.user-registration-container{
+    background: rgb(29,80,142);
+    background: linear-gradient(153deg, rgba(29,80,142,0.7) 0%, rgba(46,40,42,0.7) 100%);
+    padding:20px;
+    height: 550px;
+    margin-top: 100px;
+    border: 3px solid gray;
+    border-radius: 20px;
+    color:white;
+    font-weight: bold;
+    position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.text-info{
+    font-size: 25px;
+}
+
